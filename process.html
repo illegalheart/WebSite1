@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Weser-ITのWebサイトがどのように作られたか、その裏側にある技術（AI、Terraform、GitHub Actions）を紹介します。" />
+    <title>開発の裏側 | Weser-IT</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <header id="header">
+        <div class="container header-container">
+            <div class="logo"><a href="/" style="color: inherit; text-decoration: none;">Weser-IT</a></div>
+            <nav>
+                <ul>
+                    <li><a href="/index.html#about">強み</a></li>
+                    <li><a href="/index.html#services">サービス</a></li>
+                    <li><a href="/index.html#cases">事例</a></li>
+                    <li><a href="/process.html" class="active">開発の裏側</a></li>
+                    <li><a href="/index.html#contact" class="btn btn-primary nav-btn">無料相談</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="section-padding bg-alt">
+            <div class="container text-center">
+                <h1 class="section-title">このWebサイトができるまで</h1>
+                <p style="max-width: 800px; margin: 0 auto 40px; font-size: 1.1rem;">
+                    Weser-ITのWebサイトは、最新のAI技術と自動化ツールを駆使して構築されました。<br>
+                    「手書きとFAXを減らす」という理念を自ら体現する、その開発プロセスをご紹介します。
+                </p>
+            </div>
+        </section>
+
+        <!-- Step 1: AI & Design -->
+        <section class="section-padding">
+            <div class="container grid-2">
+                <div class="content align-center fade-up">
+                    <h2>1. AIとの協働開発</h2>
+                    <p>このサイトのコード（HTML/CSS/JS）は、AIアシスタントと共に書かれました。<br>
+                        デザインのコンセプト立案から、画像の生成まで、AIがクリエイティブパートナーとして参加しています。</p>
+                    <ul style="margin-top: 20px; list-style-type: disc; padding-left: 20px;">
+                        <li>Vite + Vanilla JSによる高速な構成</li>
+                        <li>AIによるオリジナル画像生成</li>
+                        <li>対話形式での迅速な修正と改善</li>
+                    </ul>
+                </div>
+                <div class="image fade-up">
+                    <img src="/images/process_ai.png" alt="AIとエンジニアの協働"
+                        style="width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 2: Infrastructure as Code -->
+        <section class="section-padding bg-warm">
+            <div class="container grid-2" style="direction: rtl;"> <!-- Reverse layout -->
+                <div class="content align-center fade-up" style="direction: ltr;">
+                    <h2>2. インフラのコード化 (IaC)</h2>
+                    <p>サーバー環境を手動でポチポチ設定することはありません。<br>
+                        <strong>Terraform</strong> というツールを使い、Azure上のインフラ構成を「コード」として記述・管理しています。
+                    </p>
+                    <div
+                        style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 8px; margin-top: 20px; font-family: monospace; text-align: left; font-size: 0.9rem;">
+                        resource "azurerm_static_site" "web" {<br>
+                        &nbsp;&nbsp;name = "stapp-weser-it-web"<br>
+                        &nbsp;&nbsp;location = "eastasia"<br>
+                        &nbsp;&nbsp;sku_tier = "Free"<br>
+                        }
+                    </div>
+                </div>
+                <div class="image fade-up" style="direction: ltr;">
+                    <img src="/images/process_cloud.png" alt="Azureクラウドインフラ"
+                        style="width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 3: Automation -->
+        <section class="section-padding">
+            <div class="container grid-2">
+                <div class="content align-center fade-up">
+                    <h2>3. 完全自動デプロイ (CI/CD)</h2>
+                    <p>コードを修正して保存（Git Push）するだけで、あとは全自動。<br>
+                        <strong>GitHub Actions</strong> が変更を検知し、ビルドからAzureへの公開までを数分で完了させます。
+                    </p>
+                    <ul style="margin-top: 20px; list-style-type: disc; padding-left: 20px;">
+                        <li>人為的なアップロードミスの排除</li>
+                        <li>24時間365日、いつでも即時公開</li>
+                        <li>開発に集中できる環境作り</li>
+                    </ul>
+                </div>
+                <div class="image fade-up">
+                    <img src="/images/process_automation.png" alt="GitHub Actionsによる自動化"
+                        style="width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="section-padding bg-dark text-white text-center">
+            <div class="container">
+                <h2 style="margin-bottom: 20px;">この「仕組み」そのものをご提案します</h2>
+                <p style="margin-bottom: 40px;">私たちWeser-ITは、こうした自動化技術を、お客様の現場業務にも応用します。<br>
+                    複雑なことは裏側で処理し、表側はシンプルに。</p>
+                <a href="/index.html#contact" class="btn btn-primary btn-large"
+                    style="background: white; color: var(--color-primary);">相談してみる</a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Weser-IT. All rights reserved.</p>
+        </div>
+    </footer>
+    <script type="module" src="/main.js"></script>
+</body>
+
+</html>

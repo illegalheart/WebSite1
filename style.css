@@ -424,3 +424,19 @@ footer {
         font-size: 2rem;
     }
 }
+
+/* Utilities for Process Page */
+.bg-warm {
+    background-color: #fdf6e3;
+    /* Slightly warmer than off-white */
+}
+
+.text-center {
+    text-align: center;
+}
+
+.align-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
