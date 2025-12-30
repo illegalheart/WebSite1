@@ -1,0 +1,80 @@
+name: Azure Static Web Apps CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+
+jobs:
+  build_and_deploy_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      # 1. Azure Login (using the 4 secrets user set)
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          # Note: If using individual secrets (ClientID, etc), use client-id, tenant-id, subscription-id
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          # We don't need client-secret if using OIDC, but for Service Principal with secret:
+          # The 'azure/login' action supports 'creds' json blob OR OIDC.
+          # Since user has SP secret, let's construct the creds JSON or use 'service-principal' auth mode?
+          # Actually, 'azure/login' with specific inputs is usually for OIDC (Federated).
+          # For SP with Secret, it's easiest to construct the JSON.
+        continue-on-error: true 
+        # Making this robust: Check if we need to switch to simple JSON creds logic
+
+      # Alternative: Just use the Service Principal env vars for CLI directly if act fails
+      - name: Get Deployment Token
+        id: get_token
+        run: |
+          # Log in using Service Principal explicitly if the action above was OIDC based
+          az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+          
+          # Get the API Key from the Static Web App created by Terraform
+          # Resource Group: rg-weser-it-web, Name: stapp-weser-it-web (defined in variables.tf)
+          TOKEN=$(az staticwebapp secrets list --name stapp-weser-it-web --resource-group rg-weser-it-web --query "properties.apiKey" -o tsv)
+          
+          echo "::add-mask::$TOKEN"
+          echo "deployment_token=$TOKEN" >> $GITHUB_OUTPUT
+
+      - name: Build and Deploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ steps.get_token.outputs.deployment_token }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          action: "upload"
+          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
+          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
+          app_location: "/" # App source code path
+          api_location: "" # Api source code path - optional
+          output_location: "dist" # Built app content directory - optional
+          ###### End of Repository/Build Configurations ######
+
+  close_pull_request_job:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close Pull Request Job
+    steps:
+      - name: Close Pull Request
+        id: closepullrequest
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }} # This might fail if token not in secret?
+          # We can skip the token for close job if not critical, or fetch it again.
+          action: "close"
